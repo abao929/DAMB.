@@ -225,10 +225,10 @@ def main():
     # replace with your token here:
     token = "BQBY2xTUjRhyQp87JAOkR4NkzgEF3L-6BVkG7lp8zm6FDhIhmOxJqXoyApVUXl_Kksx0wO22x_y3L_-qdlar0kHVeRnzjCYVys7pQpQC1QcPvCrKX7hPwj21n-2tvBow8cl0fF67-GQg"
     # your playlist codes and genre:
-    jazz_playlist_codes = ['37i9dQZF1DWTKxc7ZObqeH', '37i9dQZF1DX9GSZDbrndTa', '37i9dQZF1DWTbzY5gOVvKd', '37i9dQZF1EQqA6klNdJvwx', '37i9dQZF1DX76YsWjvbz9I', '37i9dQZF1DXbHcQpOiXk1D', '37i9dQZF1DWTR4ZOXTfd9K', '37i9dQZF1DX1S1NduGwpsa']
-    genre = 'jazz'
+    kpop_playlist_codes = ['37i9dQZF1DX9tPFwDMOaN1', '37i9dQZF1DX4FcAKI5Nhzq', '37i9dQZF1DX8NzI27ip7J0', '37i9dQZF1DX6Cy4Vr7Hu2y', '37i9dQZF1DWUoY6Ih7vsxr', '37i9dQZF1DX1LU4UHKqdtg', '37i9dQZF1DWZYjbSZYSpu6', '37i9dQZF1DXe5W6diBL5N4']
+    genre = 'kpop'
     # get all the album covers from the playlists:
-    get_playlists_album_covers(jazz_playlist_codes, token, genre)
+    get_playlists_album_covers(kpop_playlist_codes, token, genre)
 
 if __name__ == '__main__':
     main()
