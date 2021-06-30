@@ -9,31 +9,31 @@ import base64
 import datetime
 import time
 
-start = time.time()
+# start = time.time()
 
-client_id = '36939ed42fef4a33b670d4a6b6b64db7'
-client_secret = '620a5965374c4330b418b277cd522183'
+# client_id = '36939ed42fef4a33b670d4a6b6b64db7'
+# client_secret = '620a5965374c4330b418b277cd522183'
 
 #url = 'https://open.spotify.com/playlist/348iMtCvYQQdICvrxIBbbe?si=GbdYjuDkQ7GtMV-R2cZ98Q' #kofc
-url = 'https://open.spotify.com/playlist/5USCz2dkmTbJ3nLhk4UVip?si=UnYZdZeHQH-4MGsE0Iz0SA' #not like the other
+# url = 'https://open.spotify.com/playlist/5USCz2dkmTbJ3nLhk4UVip?si=UnYZdZeHQH-4MGsE0Iz0SA' #not like the other
 #url = 'https://open.spotify.com/playlist/1LKVe8ZEmFlxlCjqi8Us82?si=BwhGCvPuT02rjc0WQrIpFA' # 20 deloreans
 #url = 'https://open.spotify.com/playlist/1na8htLAvxOM3cWLuaublx?si=_vKbFl78S5WWJ8XIfhFhQg' #bossman
 #url = 'https://open.spotify.com/playlist/2GI6Z1IZIlsI2KCAECxBj0?si=rqJItCgnTJ6VddPYTZThCw' #sadge
 #url = 'https://open.spotify.com/playlist/4XpLccSePOM5xUvsKhkitA?si=nWoxhRJ5ShSWOZV4fxMzzg' #ncs
-page = urllib.request.urlopen(url)
-soup = bs(page, 'html.parser')
-soup = str(soup)
+# page = urllib.request.urlopen(url)
+# soup = bs(page, 'html.parser')
+# soup = str(soup)
 
-user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-headers = {'User-Agent': user_agent,}
+# user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+# headers = {'User-Agent': user_agent,}
 
-bad_urls = []
+# bad_urls = []
 
-COMMON_WORDS = ["a", "about", "all", "also", "and", "as", "at", "be", "because", "but", "by", "can", "come", "could", "day", "do", "even", "find", "first",
- "for", "from", "get", "give", "go", "have", "he", "her", "here", "him", "his", "how", "i", "if", "im", "in", "into", "it", "its", "just", "know", "like", "look",
- "make", "man", "many", "me", "more", "my", "new", "no", "not", "now", "of", "on", "one", "only", "or", "other", "our", "out", "people", "say", "see", "she",
- "so", "some", "take", "tell", "than", "that", "the", "their", "them", "then", "there", "these", "they", "thing", "think", "this", "those", "time", "to", "two",
- "up", "use", "very", "want", "way", "we", "well", "what", "when", "which", "who", "will", "with", "would", "year", "you", "your"]
+# COMMON_WORDS = ["a", "about", "all", "also", "and", "as", "at", "be", "because", "but", "by", "can", "come", "could", "day", "do", "even", "find", "first",
+#  "for", "from", "get", "give", "go", "have", "he", "her", "here", "him", "his", "how", "i", "if", "im", "in", "into", "it", "its", "just", "know", "like", "look",
+#  "make", "man", "many", "me", "more", "my", "new", "no", "not", "now", "of", "on", "one", "only", "or", "other", "our", "out", "people", "say", "see", "she",
+#  "so", "some", "take", "tell", "than", "that", "the", "their", "them", "then", "there", "these", "they", "thing", "think", "this", "those", "time", "to", "two",
+#  "up", "use", "very", "want", "way", "we", "well", "what", "when", "which", "who", "will", "with", "would", "year", "you", "your"]
 
 def find_all(a_str, sub):
     start = 0
@@ -72,24 +72,30 @@ def get_genre(access_token):
     albums = []
     return albums
 
-token = get_token(client_id, client_secret)
+# token = get_token(client_id, client_secret)
 
 def get_playlist(playlist_id, access_token):
+    '''
+    given a playlist id, returns the playlist's dictionary of information for each song
+
+    :param playlist_id: string of playlist id
+    :param access_token: api token
+    '''
     url = f'https://api.spotify.com/v1/playlists/{playlist_id}'
     headers = {
         'Authorization': f'Bearer {access_token}'
     }
     r = requests.get(url, headers=headers).json()
-    #print(r.keys())
+    # print(r.keys())
     playlist = r['tracks']['items']
     #print(len(playlist))
-    #print(r['tracks'].keys())
-    next_100 = r['tracks']['next']
-    #print(f'next 100 is {next_100}')
-    while next_100 != None:
-        r = requests.get(next_100, headers=headers).json()
+    print(r['tracks'].keys())
+    next_song = r['tracks']['next']
+    #print(f'next song is {next_song}')
+    while next_song != None:
+        r = requests.get(next_song, headers=headers).json()
         playlist.extend(r['items'])
-        next_100 = r['next']
+        next_song = r['next']
     return playlist
 
 def get_all_name_and_artist(playlist):
@@ -160,35 +166,68 @@ def everything():
     #return Counter(filtered_text).most_common()
 
 def get_album_covers(playlist):
+    '''
+    given the playlist dictionary of information, returns a list of album-cover-urls
+
+    :param playlist: a playlist dictionary of information
+    :return: a list of album-cover-urls, a list of corresponding album cover information
+        where each album's info includes [album name, artist, cover url, album url]
+    '''
     album_list = []
+    info_list = []
     for song in playlist:
-        album_info = []
-        cover = song['track']['album']['images'][0]['url']
-        if cover not in album_list:
-            album_list.append(cover)
-    return album_list
+        # album_info = []
+        album = song['track']['album']
+        artist = album['artists'][0]['name']
+        name = album['name']
+        cover_url = album['images'][0]['url']
+        album_url  = album['external_urls']['spotify']
+        info_list += [[name, artist, cover_url, album_url]]
+
+        if cover_url not in album_list:
+            album_list.append(cover_url)
+    return album_list, info_list
 
 
+def download_album_covers(cover_urls, info_list, genre):
+    '''
+    given a list of album cover urls, saves each image in the genre folder
 
-def download_album_covers():
-    album_covers = get_album_covers(get_playlist(('3V9lwpgW0JHH9ORXbMrjfQ'),  get_token(client_id, client_secret)))
-    counter = 1062
-    for link in album_covers:
-        counter += 1
-        urllib.request.urlretrieve(link, f'cover{counter}.jpg')
+    :param cover_urls: a list of cover urls
+    :param info_list: a list of corresponding album information [album name, artist, cover url, spotify url]
+    :param genre: a string of the genre name
+    :return: nothing
+    '''
+    for link, info in zip(cover_urls, info_list):
+        print(info)
+        album_name, artist, _, _ = info
+        album_name = album_name.replace("/", '-').replace(' ', '-')
+        artist = artist.replace("/", '-').replace(' ', '-')
+        
+        filename = f'{genre}/{album_name}-{artist}.jpg'
+        urllib.request.urlretrieve(link, filename)
+        
 
-""" result = everything()
-wordcloud = WordCloud(width = 800, height = 800, 
-				background_color ='white',
-				min_font_size = 10).generate(result) 
+def get_playlists_album_covers(playlist_codes, token, genre):
+    '''
+    given a list of playlist codes, saves all the album covers of the songs in all of the playlists
 
-# plot the WordCloud image					 
-plt.figure(figsize = (8, 8), facecolor = None) 
-plt.imshow(wordcloud) 
-plt.axis("off") 
-plt.tight_layout(pad = 0) 
+    :param playlist_codes: a list of playlist codes (strings)
+    :param token: api token
+    :param genre: string of the genre name
+    '''
+    for playlist in playlist_codes:
+        album_urls, info_list = get_album_covers(get_playlist(playlist, token))
+        download_album_covers(album_urls, info_list, genre)
 
-plt.savefig("mygraph.png") 
 
-end = time.time()
-print(end - start) """
+def main():
+    # replace with your token here:
+    token = "BQBY2xTUjRhyQp87JAOkR4NkzgEF3L-6BVkG7lp8zm6FDhIhmOxJqXoyApVUXl_Kksx0wO22x_y3L_-qdlar0kHVeRnzjCYVys7pQpQC1QcPvCrKX7hPwj21n-2tvBow8cl0fF67-GQg"
+    # your playlist codes:
+    indie_playlist_codes = ['37i9dQZF1DX2Nc3B70tvx0', '37i9dQZF1DX2NwU6NbPUdo', '37i9dQZF1DWUoqEG4WY6ce', '37i9dQZF1EQqkOPvHGajmW', '37i9dQZF1DX9LbdoYID5v7']
+    # get all the album covers from the playlists:
+    get_playlists_album_covers(indie_playlist_codes, token, 'indie')
+
+if __name__ == '__main__':
+    main()
