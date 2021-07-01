@@ -1,7 +1,9 @@
 import random
 import os
+import csv
 
-def tt_split(folder_name):
+def tt_split(genre):
+    folder_name = genre
     album_covers = os.listdir(folder_name)
     random.shuffle(album_covers)
     n_covers = len(album_covers)
@@ -21,12 +23,35 @@ def tt_split(folder_name):
     for cover in train_covers:
         os.rename(os.path.join(folder_name, cover), os.path.join('train', folder_name, cover))
 
-        
+def tt_split_csv(genre):
+    file_name = genre + '.csv'
+    test_rows = []
+    train_rows = []
 
+    with open(file_name, newline='') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        for row in reader:
+            print(row)
+            cover_path = row[4]
+            if os.path.isfile(os.path.join('test', cover_path)):
+                test_rows.append(row)
+            else:
+                train_rows.append(row)
+    
+    with open(os.path.join('test', genre + '.csv'), 'w', newline='') as f:
+        writer = csv.writer(f)
+        # writer.writerow(['name', 'artist', 'cover_url', 'album_url', 'album_path'])
+        writer.writerows(test_rows)
+
+    with open(os.path.join('train', genre + '.csv'), 'w', newline='') as f:
+        writer = csv.writer(f)
+        # writer.writerow(['name', 'artist', 'cover_url', 'album_url', 'album_path'])
+        writer.writerows(train_rows)
 
 def main():
-    for folder_name in ['metal', 'pop', 'r-n-b', 'rock']:
-        tt_split(folder_name)
+    for genre in ['metal', 'pop', 'r-n-b', 'rock']:
+        tt_split(genre)
+        tt_split_csv(genre)
 
 if __name__ == '__main__':
     main()

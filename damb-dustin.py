@@ -130,7 +130,7 @@ def get_playlists_album_covers(playlist_codes, token, genre):
     # write a csv consisting of track info
     with open(genre + '.csv', 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['name', 'artist', 'cover_url', 'album_url', 'album_path'])
+        # writer.writerow(['name', 'artist', 'cover_url', 'album_url', 'album_path'])
         writer.writerows(unique_infos)
 
 
