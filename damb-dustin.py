@@ -134,10 +134,20 @@ def main():
     # genre = 'r-n-b'
     # playlist_codes = ['37i9dQZF1EQoqCH7BwIYb7', '37i9dQZF1DX04mASjTsvf0', '37i9dQZF1DX6VDO8a6cQME', '37i9dQZF1DWXbttAJcbphz', '37i9dQZF1DWYmmr74INQlb', '37i9dQZF1DX7FY5ma9162x', '7Ll3CWx8VwRan0FFamai5X']
 
-    genre = 'rock'
-    playlist_codes = ['37i9dQZF1DWXRqgorJj26U', '37i9dQZF1EQpj7X7UK8OOF', '37i9dQZF1DWWJOmJ7nRx0C', '37i9dQZF1DX8FwnYE6PRvL', '37i9dQZF1DX7Ku6cgJPhh5', '37i9dQZF1DWYctfAtweUtE']
+    #genre = 'rock'
+    #playlist_codes = ['37i9dQZF1DWXRqgorJj26U', '37i9dQZF1EQpj7X7UK8OOF', '37i9dQZF1DWWJOmJ7nRx0C', '37i9dQZF1DX8FwnYE6PRvL', '37i9dQZF1DX7Ku6cgJPhh5', '37i9dQZF1DWYctfAtweUtE']
 
+    #genre = 'edm'
+    #playlist_codes = ['37i9dQZF1DX1kCIzMYtzum', '37i9dQZF1DX8tZsk68tuDw', '37i9dQZF1DX4dyzvuaRJ0n', '37i9dQZF1DX6J5NfMJS675', '37i9dQZF1DX572PAi3rtlM', '37i9dQZF1DXa8NOEUWPn9W']
+    
+    #genre = 'heavy-metal'
+    #playlist_codes = ['37i9dQZF1DX9qNs32fujYe', '6f36ma26ZFVQJ5ENPCTmYM', '2V3VUo9eHiEZRpBOcOIWeY', '44nvE1PZwr2EAE5NaqwbbX', '4xySBwCetTFl3XFjPeLRKA']
+
+    genre = 'hip-hop'
+    playlist_codes = ['37i9dQZF1DX0XUsuxWHRQd', '37i9dQZF1DX6GwdWRQMQpq', '37i9dQZF1DWY4xHQp97fN6', '37i9dQZF1DX2RxBh64BHjQ', '37i9dQZF1DX9oh43oAzkyx', '37i9dQZF1DX76t638V6CA8', '37i9dQZF1DX7Mq3mO5SSDc', '37i9dQZF1DWT5MrZnPU1zD']
+    
     # get all the album covers from the playlists:
+    
     get_playlists_album_covers(playlist_codes, token, genre)
 
 if __name__ == '__main__':
