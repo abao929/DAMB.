@@ -8,6 +8,7 @@ from collections import Counter
 import base64
 import datetime
 import time
+import os
 
 def get_token(client_id, client_secret):
     token_url = 'https://accounts.spotify.com/api/token'
@@ -51,7 +52,7 @@ def get_playlist(playlist_id, access_token):
         next_song = r['next']
     return playlist
 
-def get_album_covers(playlist):
+def get_album_covers(playlist, genre):
     '''
     given the playlist dictionary of information, returns a list of album-cover-urls
     :param playlist: a playlist dictionary of information
@@ -67,10 +68,17 @@ def get_album_covers(playlist):
         name = album['name']
         cover_url = album['images'][0]['url']
         album_url  = album['external_urls']['spotify']
-        info_list += [[name, artist, cover_url, album_url]]
+
+        album_name = name.replace("/", '-').replace(' ', '-')
+        artist = artist.replace("/", '-').replace(' ', '-')
+        filename = os.path.join(genre, album_name + '-' + artist + '.jpg')
+        # filename = f'{genre}/{album_name}-{artist}.jpg'
+
+        info_list += [[name, artist, cover_url, album_url, filename]]
 
         if cover_url not in album_list:
             album_list.append(cover_url)
+
     return album_list, info_list
 
 
@@ -82,13 +90,18 @@ def download_album_covers(cover_urls, info_list, genre):
     :param genre: a string of the genre name
     :return: nothing
     '''
+    album_filenames = []
+    
     for link, info in zip(cover_urls, info_list):
-        album_name, artist, _, _ = info
-        album_name = album_name.replace("/", '-').replace(' ', '-')
-        artist = artist.replace("/", '-').replace(' ', '-')
+        # album_name, artist, _, _ = info
+        # album_name = album_name.replace("/", '-').replace(' ', '-')
+        # artist = artist.replace("/", '-').replace(' ', '-')
         
-        filename = f'{genre}/{album_name}-{artist}.jpg'
+        filename = info[4]
+        album_filenames.append(filename)
         urllib.request.urlretrieve(link, filename)
+    
+    return
         
 
 def get_playlists_album_covers(playlist_codes, token, genre):
@@ -102,7 +115,7 @@ def get_playlists_album_covers(playlist_codes, token, genre):
     all_infos = []
 
     for playlist in playlist_codes:
-        album_urls, info_list = get_album_covers(get_playlist(playlist, token))
+        album_urls, info_list = get_album_covers(get_playlist(playlist, token), genre)
         all_albums += album_urls
         all_infos += info_list
 
@@ -117,16 +130,17 @@ def get_playlists_album_covers(playlist_codes, token, genre):
     # write a csv consisting of track info
     with open(genre + '.csv', 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['name', 'artist', 'cover_url', 'album_url'])
+        writer.writerow(['name', 'artist', 'cover_url', 'album_url', 'album_path'])
         writer.writerows(unique_infos)
+
 
 def main():
     token = get_token('ddca8689d9204ea9b5cc65950a0d6ae1', '5f31abfff68d4017926f7eb2eaf179da')
     # make sure genre is set to the correct one
     # note that playlists should only consist of songs of the correct genre. You can look up a genre on spotify to search for playlists.
 
-    # genre = 'metal'
-    # playlist_codes = ['37i9dQZF1DWWOaP4H0w5b0', '37i9dQZF1DX9qNs32fujYe', '37i9dQZF1DWTcqUzwhNmKv', '37i9dQZF1DWXHwQpcoF2cC', '37i9dQZF1DWUnhhRs5u3TO', '37i9dQZF1EQpgT26jgbgRI']
+    genre = 'metal'
+    playlist_codes = ['37i9dQZF1DWWOaP4H0w5b0', '37i9dQZF1DX9qNs32fujYe', '37i9dQZF1DWTcqUzwhNmKv', '37i9dQZF1DWXHwQpcoF2cC', '37i9dQZF1DWUnhhRs5u3TO', '37i9dQZF1EQpgT26jgbgRI']
 
     # genre = 'pop'
     # playlist_codes = ['37i9dQZF1EQncLwOalG3K7', '5TDtuKDbOhrfW7C58XnriZ', '6mtYuOxzl58vSGnEDtZ9uB', '37i9dQZF1DWXti3N4Wp5xy', '37i9dQZF1DWUa8ZRTfalHk', '37i9dQZF1DXcOFePJj4Rgb']
@@ -134,8 +148,8 @@ def main():
     # genre = 'r-n-b'
     # playlist_codes = ['37i9dQZF1EQoqCH7BwIYb7', '37i9dQZF1DX04mASjTsvf0', '37i9dQZF1DX6VDO8a6cQME', '37i9dQZF1DWXbttAJcbphz', '37i9dQZF1DWYmmr74INQlb', '37i9dQZF1DX7FY5ma9162x', '7Ll3CWx8VwRan0FFamai5X']
 
-    genre = 'rock'
-    playlist_codes = ['37i9dQZF1DWXRqgorJj26U', '37i9dQZF1EQpj7X7UK8OOF', '37i9dQZF1DWWJOmJ7nRx0C', '37i9dQZF1DX8FwnYE6PRvL', '37i9dQZF1DX7Ku6cgJPhh5', '37i9dQZF1DWYctfAtweUtE']
+    # genre = 'rock'
+    # playlist_codes = ['37i9dQZF1DWXRqgorJj26U', '37i9dQZF1EQpj7X7UK8OOF', '37i9dQZF1DWWJOmJ7nRx0C', '37i9dQZF1DX8FwnYE6PRvL', '37i9dQZF1DX7Ku6cgJPhh5', '37i9dQZF1DWYctfAtweUtE']
 
     # get all the album covers from the playlists:
     get_playlists_album_covers(playlist_codes, token, genre)
