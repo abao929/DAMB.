@@ -31,7 +31,7 @@ def tt_split_csv(genre):
     with open(file_name, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         for row in reader:
-            print(row)
+            # print(row)
             cover_path = row[4]
             if os.path.isfile(os.path.join('test', cover_path)):
                 test_rows.append(row)
@@ -49,7 +49,7 @@ def tt_split_csv(genre):
         writer.writerows(train_rows)
 
 def main():
-    for genre in ['metal', 'pop', 'r-n-b', 'rock']:
+    for genre in ['metal']:
         tt_split(genre)
         tt_split_csv(genre)
 
