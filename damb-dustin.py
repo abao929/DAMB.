@@ -99,7 +99,7 @@ def download_album_covers(cover_urls, info_list, genre):
         
         filename = info[4]
         album_filenames.append(filename)
-        urllib.request.urlretrieve(link, filename[:-4][:251] + '.jpg')
+        urllib.request.urlretrieve(link, os.path.join('data', filename[:-4][:251] + '.jpg'))
     
     return
         
@@ -122,7 +122,7 @@ def get_playlists_album_covers(playlist_codes, token, genre):
     download_album_covers(all_albums, all_infos, genre)
 
     # write a csv consisting of track info
-    with open(genre + '.csv', 'w', newline='') as f:
+    with open(os.path.join('data', genre + '.csv'), 'w', newline='') as f:
         writer = csv.writer(f)
         # writer.writerow(['name', 'artist', 'cover_url', 'album_url', 'album_path'])
         seen = set()
@@ -161,6 +161,9 @@ def main():
         'classical': ['1h0CEZCm6IbFTbxThn6Xcs', '37i9dQZF1DWVFeEut75IAL', '37i9dQZF1DWWEJlAGA9gs0', '37i9dQZF1DXd5zUwdn6lPb', '29TfHADnSx2AvDSgbWBMDU', '2bKGFDfzL8eD9XgH4IsQPC', '5ifMsPihlkYEGCakqfqj17', '1Z7fO3bkVteGsTbVluOQoH', '3tzZNGemkwbXFH6T6r4ElA', '2IUEKduilh9DtH1WFzOZ07', '0CcBreFuJdFY10TZmSN2Ws'],
         'country': ['7lQu0IRGR1qTjWYdZbbKXE', '0J74JRyDCMotTzAEKMfwYN', '37i9dQZF1DX13ZzXoot6Jc', '37i9dQZF1DXdxUH6sNtcDe', '37i9dQZF1DWXdiK4WAVRUW', '41atVM1CMCAmZ62euTrCla', '6wQFfOF4QYyoZhBGlhCWHZ']
     }
+
+    if not os.path.exists('data'):
+        os.mkdir('data')
 
     for genre in genres:
         if not os.path.exists(genre):
