@@ -49,7 +49,7 @@ def tt_split_csv(genre):
         writer.writerows(train_rows)
 
 def main():
-    for genre in ['metal']:
+    for genre in ['metal', 'pop', 'r-n-b', 'rock', 'edm', 'heavy-metal', 'hip-hop', 'indie', 'jazz', 'kpop', 'latin', 'alternative', 'blues', 'classical', 'country']:
         tt_split(genre)
         tt_split_csv(genre)
 
