@@ -50,4 +50,4 @@ The biggest techinical challenge that we anticipate is building and training a m
 
 In particular, we anticipate that training the models will be fairly time-consuming, since even though we have scaled down our images, they are still very dense compared to a vector of at most several variables. 
 
-We divided data collection by assigning genres among our members to collect. We also all collaborated on creating a standardized data collection method and train test split. We also all worked on this report together, providing feedback on suggestions iteratively.
+We divided data collection by assigning genres among our members to collect. We also all collaborated on creating a standardized data collection method and train test split. We also all worked on writing this report together, incorporating feedback and opinions from all members of the group.
