@@ -66,6 +66,8 @@ def get_album_covers(playlist, genre):
         album = song['track']['album']
         artist = album['artists'][0]['name'].lower()
         name = album['name'].lower()
+        if len(album['images']) == 0:
+            continue
         cover_url = album['images'][0]['url'].lower()
         album_url  = album['external_urls']['spotify'].lower()
 
@@ -76,8 +78,7 @@ def get_album_covers(playlist, genre):
 
         info_list += [[name, artist, cover_url, album_url, filename]]
 
-        if cover_url not in album_list:
-            album_list.append(cover_url)
+        album_list.append(cover_url)
 
     return album_list, info_list
 
@@ -99,6 +100,8 @@ def download_album_covers(cover_urls, info_list, genre):
         
         filename = info[4]
         album_filenames.append(filename)
+        # print(link)
+        # print(filename)
         urllib.request.urlretrieve(link, os.path.join('data', filename[:-4][:251] + '.jpg'))
     
     return
@@ -142,7 +145,7 @@ def main():
     # note that playlists should only consist of songs of the correct genre. You can look up a genre on spotify to search for playlists.
 
     # genres = ['metal', 'pop', 'r-n-b', 'rock', 'edm', 'heavy-metal', 'hip-hop', 'indie', 'jazz', 'kpop', 'latin', 'alternative', 'blues', 'classical', 'country']
-    genres = ['alternative', 'blues', 'classical', 'country']
+    genres = ['jazz', 'kpop', 'latin', 'alternative', 'blues', 'classical', 'country']
 
     playlist_codes_dict = {
         'metal': ['37i9dQZF1DWWOaP4H0w5b0', '37i9dQZF1DX9qNs32fujYe', '37i9dQZF1DWTcqUzwhNmKv', '37i9dQZF1DWXHwQpcoF2cC', '37i9dQZF1DWUnhhRs5u3TO', '37i9dQZF1EQpgT26jgbgRI'],
@@ -166,8 +169,8 @@ def main():
         os.mkdir('data')
 
     for genre in genres:
-        if not os.path.exists(genre):
-            os.mkdir(genre)
+        if not os.path.exists(os.path.join('data', genre)):
+            os.mkdir(os.path.join('data', genre))
         
         playlist_codes = playlist_codes_dict[genre]
 
