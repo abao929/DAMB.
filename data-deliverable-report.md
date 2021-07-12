@@ -28,6 +28,8 @@ The second issue is that not all images are square; we need every image to be sq
 
 An issue that could be problematic is that the names of songs occaisonally contained special characters, such as accented characters or symbolic characters like korean. However, we are primarily focused on relating images to genre labels, so while these characters have introduced some errors in our data collection and manipulation process, they will most likely not interfere with the actual training.
 
+Lastly, we noticed that a small number of album covers have "duplicates" in the sense that there are "deluxe" versions of other album covers. These album covers have different image names and in some cases the album cover images themselves are different, so it they are arguably different from their normal versions. In addition, there are relatively few instances of this relative to the number of covers in our dataset, so we decided that this will not substantially impact the results of our trained model.
+
 2. We dealt with the issues raised above by resizing the images to 160 x 160 pixels. This was done in a manner that preserves the information in each image; the images were scaled down rather than simply cropping a 160 x 160 square out of the full-sized image. We did not find any anomalous traits that required us to eliminate any data.
 
 ## Step 4
