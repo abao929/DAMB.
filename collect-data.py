@@ -11,6 +11,14 @@ import time
 import os
 
 def get_token(client_id, client_secret):
+    '''
+    given a Spotify API client id, and client secret, returns a Spotify API
+    token to make requests from. Each token has a limited period before it
+    expires so this function ensures that we always generate a new token
+    during each run
+    :param client_id: string representing a client id from Spotify's API developer console
+    :param client_secret: string representing a client secret from Spotify's API developer console
+    '''
     token_url = 'https://accounts.spotify.com/api/token'
     token_data = { 
         'grant_type': 'client_credentials'
@@ -74,7 +82,6 @@ def get_album_covers(playlist, genre):
         album_name = name.replace("/", '-').replace(' ', '-')
         artist = artist.replace("/", '-').replace(' ', '-')
         filename = os.path.join(genre, album_name + '-' + artist + '.jpg')
-        # filename = f'{genre}/{album_name}-{artist}.jpg'
 
         info_list += [[name, artist, cover_url, album_url, filename]]
 
@@ -94,14 +101,8 @@ def download_album_covers(cover_urls, info_list, genre):
     album_filenames = []
     
     for link, info in zip(cover_urls, info_list):
-        # album_name, artist, _, _ = info
-        # album_name = album_name.replace("/", '-').replace(' ', '-')
-        # artist = artist.replace("/", '-').replace(' ', '-')
-        
         filename = info[4]
         album_filenames.append(filename)
-        # print(link)
-        # print(filename)
         urllib.request.urlretrieve(link, os.path.join('data', filename[:-4][:251] + '.jpg'))
     
     return
@@ -140,13 +141,14 @@ def get_playlists_album_covers(playlist_codes, token, genre):
 
 
 def main():
+    # Obtain our Spotify API token that we will use to make queries
     token = get_token('ddca8689d9204ea9b5cc65950a0d6ae1', '5f31abfff68d4017926f7eb2eaf179da')
-    # make sure genre is set to the correct one
-    # note that playlists should only consist of songs of the correct genre. You can look up a genre on spotify to search for playlists.
 
-    # genres = ['metal', 'pop', 'r-n-b', 'rock', 'edm', 'heavy-metal', 'hip-hop', 'indie', 'jazz', 'kpop', 'latin', 'alternative', 'blues', 'classical', 'country']
-    genres = ['jazz', 'kpop', 'latin', 'alternative', 'blues', 'classical', 'country']
+    # These are the genres that we will collect data for
+    genres = ['metal', 'pop', 'r-n-b', 'rock', 'edm', 'heavy-metal', 'hip-hop', 'indie', 'jazz', 'kpop', 'latin', 'alternative', 'blues', 'classical', 'country']
 
+    # Each string is an ID corresponding to a Spotify-generated or user-genereated playlist that is dedicated to songs of a specific genre. These were found manually
+    # by all members of our group.
     playlist_codes_dict = {
         'metal': ['37i9dQZF1DWWOaP4H0w5b0', '37i9dQZF1DX9qNs32fujYe', '37i9dQZF1DWTcqUzwhNmKv', '37i9dQZF1DWXHwQpcoF2cC', '37i9dQZF1DWUnhhRs5u3TO', '37i9dQZF1EQpgT26jgbgRI'],
         'pop': ['37i9dQZF1EQncLwOalG3K7', '5TDtuKDbOhrfW7C58XnriZ', '6mtYuOxzl58vSGnEDtZ9uB', '37i9dQZF1DWXti3N4Wp5xy', '37i9dQZF1DWUa8ZRTfalHk', '37i9dQZF1DXcOFePJj4Rgb'],
@@ -165,9 +167,11 @@ def main():
         'country': ['7lQu0IRGR1qTjWYdZbbKXE', '0J74JRyDCMotTzAEKMfwYN', '37i9dQZF1DX13ZzXoot6Jc', '37i9dQZF1DXdxUH6sNtcDe', '37i9dQZF1DWXdiK4WAVRUW', '41atVM1CMCAmZ62euTrCla', '6wQFfOF4QYyoZhBGlhCWHZ']
     }
 
+    # Create a directory to store our data in
     if not os.path.exists('data'):
         os.mkdir('data')
 
+    # For each genre, open each playlist and download the album covers of each song's album
     for genre in genres:
         if not os.path.exists(os.path.join('data', genre)):
             os.mkdir(os.path.join('data', genre))
@@ -175,18 +179,6 @@ def main():
         playlist_codes = playlist_codes_dict[genre]
 
         get_playlists_album_covers(playlist_codes, token, genre)
-
-    # genre = 'pop'
-    # playlist_codes = 
-
-    # genre = 'r-n-b'
-    # playlist_codes = 
-
-    # genre = 'rock'
-    # playlist_codes = 
-
-    # get all the album covers from the playlists:
-
 
 if __name__ == '__main__':
     main()
