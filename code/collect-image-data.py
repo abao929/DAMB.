@@ -103,7 +103,7 @@ def download_album_covers(cover_urls, info_list, genre):
     for link, info in zip(cover_urls, info_list):
         filename = info[4]
         album_filenames.append(filename)
-        urllib.request.urlretrieve(link, os.path.join('data', filename[:-4][:251] + '.jpg'))
+        urllib.request.urlretrieve(link, os.path.join('image_data', filename[:-4][:251] + '.jpg'))
     
     return
         
@@ -126,7 +126,7 @@ def get_playlists_album_covers(playlist_codes, token, genre):
     download_album_covers(all_albums, all_infos, genre)
 
     # write a csv consisting of track info
-    with open(os.path.join('data', genre + '.csv'), 'w', newline='') as f:
+    with open(os.path.join('image_data', genre + '.csv'), 'w', newline='') as f:
         writer = csv.writer(f)
         # writer.writerow(['name', 'artist', 'cover_url', 'album_url', 'album_path'])
         seen = set()
@@ -168,13 +168,13 @@ def main():
     }
 
     # Create a directory to store our data in
-    if not os.path.exists('data'):
-        os.mkdir('data')
+    if not os.path.exists('image_data'):
+        os.mkdir('image_data')
 
     # For each genre, open each playlist and download the album covers of each song's album
     for genre in genres:
-        if not os.path.exists(os.path.join('data', genre)):
-            os.mkdir(os.path.join('data', genre))
+        if not os.path.exists(os.path.join('image_data', genre)):
+            os.mkdir(os.path.join('image_data', genre))
         
         playlist_codes = playlist_codes_dict[genre]
 
