@@ -4,7 +4,7 @@
 
 ## Step 1
 
-1. We first queried Spotify's API to determine what genres of songs Spotify defines, and then selected 15 genres that we felt were distinct and popular enough to classify. We searched Spotify for Spotify-generated and user-generated playlists pertaining to a specific genre (e.g. a pop music playlist or a metal music playlist), and saved the Spotify ids of these playlists. We then made requests to Spotify's API to get the songs of the playlist, and then for each song we extracted the url of the song's album cover. We then downloaded the album cover at this url and placed it in a directory corresponding to the genre of the playlist. In addition, we saved metadata relating to each cover that we collected, such as the name of the album and the name of the artist(s) in a csv file for each genre. 
+1. We first queried Spotify's API to determine what genres of songs Spotify defines, and then selected 15 genres that we felt were distinct and popular enough to classify. We searched Spotify for Spotify-generated and user-generated playlists pertaining to a specific genre (e.g. a pop music playlist or a metal music playlist), and saved the Spotify ids of these playlists. We then made requests to Spotify's API to get the songs of the playlist, and then for each song we extracted numerous Spotify API features, such as whether the song contains explicit language or whether the song is suitable for dancing. In addition, we downloaded the album cover of each song and identified the dominant hue, saturation, and value of the image.
 
 2. Our data partially consists of user-created playlists, so part of our data relies on the classifications of Spotify users. However, we believe that these classifications are reputable, because 1) we selected highly popular playlists, so the playlists we selected have the backing of many users on the site who approve of the song choices and 2) the classification of genres as a whole has a lot to do with how listeners recognize specific  traits in a song, and so user-generated playlists satisfy our goal of classifying genres. 
 
@@ -12,11 +12,9 @@ At first we had planned on getting genre labels from Spotify's API, since the do
 
 ## Step 2
 
-The majority of the data that we plan to work with is album cover images that we collected, which are all .jpg files. We plan to represent these images in as a numpy array containing three rgb channels. Each image is labelled with a genre, which we represent as a string.
+While our dataset does not have an explicit primary key attribute, a tuple of (song name, artist name), each of which are strings, acts as the primary key; we assume that no artist has released two songs with the same name.  
 
-Our csv files contain the name of each song, the artist(s) of each song, as well as the url and location in our database of each song. Each of these attributes are strings. While we currently don't have plans of incorporating this data directly into our training, we believe that it could be useful if we wanted to query for supplemental data, for instance by querying song lyrics by searching with the song/artist's name.
-
-While our dataset does not have an explicit primary key attribute, the locations of the album cover images act as the primary key; no two images in a directory have the exact same name, so the uniqueness neccessary for a primary key holds.  
+Variables of interest include whether the song has explict lyrics or not (boolean), how popular the song is on a Spotify-defined score of 0-100 (integer), how suitable the song is for dancing, according to Spotify on a scale from 0 to 1 (float), and the valence, how positive or negative the song is. We have collected other variables from spoityf
 
 ## Step 3
 
