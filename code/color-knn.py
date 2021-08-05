@@ -14,9 +14,7 @@ RANDOM_SEED = 0
 
 def closest_colour(requested_colour):
     min_colours = {}
-    total_colors = [('#FF0000','red'), ('#FFA500','orange'), ('#FFFF00','yellow'),
-                    ('#008000','green'), ('#0000FF','blue'), ('#800080','purple'),
-                    ('#000000','black'), ('#FFFFFF','white'), ('#582705','brown')]
+    total_colors = [('#000000','black'), ('#FFFFFF','white')]
     for key, name in total_colors: #webcolors.CSS3_HEX_TO_NAMES.items():
         r_c, g_c, b_c = webcolors.hex_to_rgb(key)
         rd = (r_c - requested_colour[0]) ** 2
@@ -39,6 +37,35 @@ def knn_and_baseline(X_train_, y_train_, X_test_, y_test_, dataset):
 
     return knn, baseline
 
+def contour_plot(model, X_data, y_data, genres, xlabel, ylabel):
+    h = 0.01
+    x_min, x_max = X_data[:, 0].min() - 0.1, X_data[:, 0].max() + 0.1
+    y_min, y_max = X_data[:, 1].min() - 0.1, X_data[:, 1].max() + 0.1
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                        np.arange(y_min, y_max, h))
+    
+
+    indices = list(range(len(genres)))
+    indices_dict = dict(zip(genres, indices))
+    
+    Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = np.array([indices_dict[category] for category in Z])
+    c = np.array([indices_dict[category] for category in y_data.to_numpy()])
+    ZZ = Z.reshape(xx.shape)
+
+    cmap = 'tab20'
+    
+    fig, ax = plt.subplots()
+    ax.contourf(xx, yy, ZZ, cmap=cmap, alpha=0.7)
+    scatter = ax.scatter(X_data[:, 0], X_data[:, 1], edgecolor='black', linewidth=0.2, alpha=0.7, c=c, cmap=cmap)
+    plt.xlim(xx.min(), xx.max())
+    plt.ylim(yy.min(), yy.max())
+    plt.title('Model Clustering on danceability and loudness')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    ax.legend(labels=list(indices_dict.keys()), handles=scatter.legend_elements()[0], bbox_to_anchor=(1, 1), loc='upper left')
+    
+    plt.show()
 
 def main():
     train_data = pd.read_csv("../data/data-train-final.csv")
@@ -51,7 +78,9 @@ def main():
         #rgb_to_web(rgb_val)
     print(train_data['color'])
 
-    features = ['popularity','danceability','energy','key','loudness','valence','speechiness']
+    # features = ['popularity','danceability','energy','key','loudness','valence','speechiness']
+    features = ['valence','energy']
+
     relevant_features = features + ['color']
     train_data = train_data[relevant_features]
     dependent_variable = 'color'
@@ -59,6 +88,11 @@ def main():
     y = train_data[dependent_variable]
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=RANDOM_SEED)
     knn, baseline = knn_and_baseline(X_train, y_train, X_val, y_val, train_data)
+
+    if len(features) == 2:
+        contour_plot(knn, X_train.to_numpy(), y_train, ['black', 'white'], features[0], features[1])
+
+
 
 if __name__ == "__main__":
     np.random.seed(RANDOM_SEED)
