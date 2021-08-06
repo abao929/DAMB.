@@ -112,29 +112,29 @@ def main():
     # features = ['loudness']
     # dependent_variable = 'valence'
 
-    # X = train_data[features].astype(float)
-    # y = train_data[dependent_variable].astype(float)
+    X = train_data[features].astype(float)
+    y = train_data[dependent_variable].astype(float)
     
-    train_data['updated_modality'] = train_data['modality']
-    A = train_data['updated_modality']
-    A[A == 0] = -1
-    # sum_col = train_data['key'] * 2 + train_data['modality']
-    keymode_col = train_data['key'] * train_data['updated_modality']
+    # train_data['updated_modality'] = train_data['modality']
+    # A = train_data['updated_modality']
+    # A[A == 0] = -1
+    # # sum_col = train_data['key'] * 2 + train_data['modality']
+    # keymode_col = train_data['key'] * train_data['updated_modality']
 
-    train_data['keymode'] = keymode_col
-    X = train_data[['keymode']].astype(float)
-    y = train_data['valence'].astype(float)
+    # train_data['keymode'] = keymode_col
+    # X = train_data[['keymode']].astype(float)
+    # y = train_data['valence'].astype(float)
     # print(X)
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=RANDOM_SEED)
     
     # knn, baseline = knn_and_baseline(X_train, y_train, X_val, y_val, train_data)
     
     # oops linear regression doesn't really work in this context bc not continuous values
-    mse, r2 = lin_reg(X_train, y_train, X_val, y_val)
+    # mse, r2 = lin_reg(X_train, y_train, X_val, y_val)
 
     # dependence between modality (major/minor) and valence (positivity)?
     print('\nchi squared indep test:')
-    tstats, pval = chisquared_independence_test(train_data, 'valence', 'keymode')
+    tstats, pval = chisquared_independence_test(train_data, 'valence', 'modality')
     print('\n\n')
 
 
